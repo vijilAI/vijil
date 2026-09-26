@@ -1,0 +1,42 @@
+# Copyright 2026 Vijil, Inc.
+# SPDX-License-Identifier: Apache-2.0
+# Example config for a scheduled Trusted Agent Lifecycle run.
+# Copy to cycles/<your-id>.yaml, fill the <placeholders>, and schedule it to
+# invoke:  /vijil <your-id>
+# Requires the bundled `vijil-mcp` server connected (VIJIL_CLIENT_ID +
+# VIJIL_CLIENT_SECRET — see README).
+# For an interactive first run you do not need this file (or a key) at all —
+# just: /vijil inspect
+
+id: trust-<agent-label>
+
+# Which Agent(s) to run the lifecycle over. One of:
+agent:
+  agent_id: <agent uuid>          # a single governed Agent, OR:
+  # select: governed              # every governed Agent the token can see
+  # select: all                   # all your registered agents
+  # niche: <role/capability slot> # optional narrowing
+  # tag: <tag>                    # optional narrowing
+
+# false = read existing Diamond scores only (cheap, fully read-only).
+# true  = run a fresh evaluation when no recent score exists (a Diamond
+#         measurement, NOT a mutation of the agent; honors the free-eval budget).
+evaluate: false
+
+# Pillar score at or below which a finding is treated as `high`.
+trust_floor: 0.8
+
+# Only findings at or above this severity are routed as proposals.
+# One of: Critical | Important | Minor (see skills/agent-lifecycle/sweeps/trust.md).
+severity_floor: Important
+
+# Where dated proposal-lists and the per-agent state file are written.
+blackboard: <path to a directory for this cycle's proposal-lists and state>
+
+# The Learn element: where recurring findings accumulate, and the threshold at
+# which a recurring signature becomes a durable change.
+learn:
+  ledger: <blackboard>/learnings-ledger.json
+  min_occurrences: 3
+  min_distinct_agents: 2
+  window_days: 90
