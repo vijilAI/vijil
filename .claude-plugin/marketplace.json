@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/claude-code-marketplace-manifest.json",
+  "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
   "name": "vijil",
   "description": "Vijil — the Trusted Agent Lifecycle for Claude Code.",
   "owner": {
@@ -10,7 +10,7 @@
     {
       "name": "vijil",
       "displayName": "Vijil",
-      "source": ".",
+      "source": "./",
       "description": "Inspect, evaluate, analyze, protect, adapt, and register the agents you build — powered by Vijil Diamond, Dome, and Darwin. The first white-box trust read (inspect) is free and needs no account.",
       "category": "productivity",
       "keywords": ["ai-agents", "trust", "agent-evaluation", "guardrails"],
