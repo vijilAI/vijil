@@ -17,9 +17,9 @@
       "command": "uvx",
       "args": ["vijil-mcp"],
       "env": {
-        "VIJIL_CLIENT_ID": "${VIJIL_CLIENT_ID}",
-        "VIJIL_CLIENT_SECRET": "${VIJIL_CLIENT_SECRET}",
-        "VIJIL_API_KEY": "${VIJIL_API_KEY}",
+        "VIJIL_CLIENT_ID": "${VIJIL_CLIENT_ID:-}",
+        "VIJIL_CLIENT_SECRET": "${VIJIL_CLIENT_SECRET:-}",
+        "VIJIL_API_KEY": "${VIJIL_API_KEY:-}",
         "VIJIL_CONSOLE_URL": "${VIJIL_CONSOLE_URL}"
       }
     }

@@ -57,8 +57,11 @@ from — run it first if you're not sure what's actually configured.
    a localhost server, exchanges the auth code for a Vijil JWT, and writes it
    to `~/.vijil/credentials.json` and `~/.vijil/config.yaml`. No third-party
    identity provider is involved anywhere in the flow. The plugin's MCP
-   server reads that session automatically — `VIJIL_API_KEY` takes precedence
-   when set, and a browser session is used when it is not.
+   server reads that session automatically, at the bottom of this ladder:
+   an explicit `--api-key` flag → `VIJIL_CLIENT_ID` + `VIJIL_CLIENT_SECRET`
+   → `VIJIL_API_KEY` → the on-disk session. So a real key pair exported in
+   the shell outranks the session this command writes, while an unexpanded
+   `${VIJIL_CLIENT_ID}` placeholder reads as unset and does not.
 
 2. **If the browser cannot open**, the command prints a URL instead. Surface
    that URL to the user verbatim. A headless terminal is not a failure.
