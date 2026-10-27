@@ -38,9 +38,9 @@ uvx vijil-console auth init --url https://<your-console>
 uvx vijil-console auth login-browser
 ```
 
-or set `export VIJIL_CONSOLE_URL=https://<your-console>` alongside the keys
-above. Either way, reconnect the MCP server afterward — it read the
-environment once, at startup.
+Or set `export VIJIL_CONSOLE_URL=https://<your-console>` instead — then
+reconnect the MCP server, since only that path is read from the environment
+at spawn.
 
 ```
 /vijil evaluate <agent>   # re-runs inspect + Diamond: baseline → bespoke → adaptive
