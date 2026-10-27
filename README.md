@@ -29,6 +29,19 @@ weekly allowance sized to run a full turn of the loop):
 export VIJIL_CLIENT_ID=vk_...        # from https://console.vijil.ai → Settings → API Keys
 export VIJIL_CLIENT_SECRET=...       # shown once, at creation — copy it then
 ```
+
+Self-hosting your own Console instead of `console.vijil.ai`? Point the plugin
+at it once, then sign in:
+
+```bash
+uvx vijil-console auth init --url https://<your-console>
+uvx vijil-console auth login-browser
+```
+
+or set `export VIJIL_CONSOLE_URL=https://<your-console>` alongside the keys
+above. Either way, reconnect the MCP server afterward — it read the
+environment once, at startup.
+
 ```
 /vijil evaluate <agent>   # re-runs inspect + Diamond: baseline → bespoke → adaptive
 /vijil analyze <agent>    # root-cause the failures → prompt / guardrail / code

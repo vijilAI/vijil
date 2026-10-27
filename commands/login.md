@@ -25,6 +25,14 @@ which is free, local, and needs no account at all. For CI or a headless
 box, `VIJIL_CLIENT_ID` + `VIJIL_CLIENT_SECRET` remain the better path — a
 revocable key pair beats an interactive flow no one is present to complete.
 
+**Changed `VIJIL_CONSOLE_URL`, `VIJIL_CLIENT_ID`, or `VIJIL_CLIENT_SECRET` in
+your shell and nothing changed?** The MCP server captured its environment
+when it started and will not see the change until you reconnect it — editing
+the variable again will not help. Reconnect the `vijil-mcp` server, then
+retry. `uvx vijil-console auth status` reports the credential source, the
+URL in use, and where that URL came from — run it first if you're not sure
+what's actually configured.
+
 ## Steps
 
 1. **Run the sign-in, in the foreground.**
