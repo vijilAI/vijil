@@ -25,6 +25,19 @@ which is free, local, and needs no account at all. For CI or a headless
 box, `VIJIL_CLIENT_ID` + `VIJIL_CLIENT_SECRET` remain the better path — a
 revocable key pair beats an interactive flow no one is present to complete.
 
+**Ran `auth init --url` or `login-browser` and nothing changed?** Those
+write to disk, and every `vijil-mcp` tool call shells out fresh and rereads
+`~/.vijil/config.yaml` / `credentials.json` — the next call already sees
+it, no reconnect needed.
+
+**Exported `VIJIL_CONSOLE_URL`, `VIJIL_CLIENT_ID`, or `VIJIL_CLIENT_SECRET`
+in your shell and nothing changed?** That's different: the MCP server's
+process inherited the environment only at spawn, so a later `export` never
+reaches it — editing the variable again will not help. Run `/mcp`, pick
+`vijil-mcp`, and reconnect it, then retry. `uvx vijil-console auth status`
+reports the credential source, the URL in use, and where that URL came
+from — run it first if you're not sure what's actually configured.
+
 ## Steps
 
 1. **Run the sign-in, in the foreground.**
@@ -44,8 +57,11 @@ revocable key pair beats an interactive flow no one is present to complete.
    a localhost server, exchanges the auth code for a Vijil JWT, and writes it
    to `~/.vijil/credentials.json` and `~/.vijil/config.yaml`. No third-party
    identity provider is involved anywhere in the flow. The plugin's MCP
-   server reads that session automatically — `VIJIL_API_KEY` takes precedence
-   when set, and a browser session is used when it is not.
+   server reads that session automatically, at the bottom of this ladder:
+   an explicit `--api-key` flag → `VIJIL_CLIENT_ID` + `VIJIL_CLIENT_SECRET`
+   → `VIJIL_API_KEY` → the on-disk session. So a real key pair exported in
+   the shell outranks the session this command writes, while an unexpanded
+   `${VIJIL_CLIENT_ID}` placeholder reads as unset and does not.
 
 2. **If the browser cannot open**, the command prints a URL instead. Surface
    that URL to the user verbatim. A headless terminal is not a failure.
@@ -53,8 +69,9 @@ revocable key pair beats an interactive flow no one is present to complete.
 3. **Report what actually happened.** On success, say they are signed in and
    can run `/vijil evaluate`. On timeout or failure, show the error the
    command printed. Never report a sign-in you did not see succeed — an
-   agent that claims a session it does not have sends the user into a
-   confusing 401 one step later.
+   agent that claims a session it does not have sends the user into a 401
+   one step later, and even now that it names the URL and credential
+   source it is still a wasted, avoidable step.
 
 ## Boundary
 

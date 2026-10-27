@@ -29,6 +29,54 @@ weekly allowance sized to run a full turn of the loop):
 export VIJIL_CLIENT_ID=vk_...        # from https://console.vijil.ai → Settings → API Keys
 export VIJIL_CLIENT_SECRET=...       # shown once, at creation — copy it then
 ```
+
+Self-hosting your own Console instead of `console.vijil.ai`? Point the plugin
+at it once, then sign in:
+
+```bash
+uvx vijil-console auth init --url https://<your-console>
+uvx vijil-console auth login-browser
+```
+
+Or set `export VIJIL_CONSOLE_URL=https://<your-console>` instead — then
+reconnect the MCP server, since only that path is read from the environment
+at spawn.
+
+If that Console's certificate comes from your own PKI rather than a public
+CA, export the bundle too — Python verifies against `certifi`, which will
+not carry it:
+
+```bash
+export VIJIL_CA_BUNDLE=/etc/ssl/certs/your-internal-ca.pem
+```
+
+It is **additive**: the client then verifies against the OS trust store,
+`certifi`, *and* that file. It never turns verification off, and nothing
+here can. This is the one piece of self-hosted configuration that cannot be
+saved to a config file, so it has to be in the environment the MCP server
+is spawned with — which is why the manifest passes it through. Ask Claude
+to check your Vijil setup (the `vijil_status` tool), or run `uvx
+vijil-console auth status`: a bundle in effect is reported as `ca_bundle`,
+and a missing one is why an otherwise correct setup fails with
+`CERTIFICATE_VERIFY_FAILED`.
+
+<!-- Why the manifest's four `env` values are not spelled the same way.
+     `VIJIL_CLIENT_ID`, `VIJIL_CLIENT_SECRET`, `VIJIL_API_KEY` and
+     `VIJIL_CA_BUNDLE` use `${X:-}`; `VIJIL_CONSOLE_URL` is the bare
+     `${VIJIL_CONSOLE_URL}`. That asymmetry is load-bearing, not an
+     oversight, and `plugin.json` cannot carry a comment saying so.
+
+     A host that does not honour `:-` passes the literal text through. The
+     clients absorb a bare `${NAME}` as "unset" on both the credential and
+     the URL ladder (`is_bare_placeholder`), so the URL key is safe in that
+     form — and it must be in that form, because a literal `${X:-}` would
+     reach the URL scheme check and hard-fail every command. For the three
+     credentials the reverse holds: `${X:-}` is what a host that *does*
+     honour `:-` turns into an empty string, which is the outcome we want,
+     and `is_unexpanded_placeholder` absorbs the literal form if it does
+     not. Tidying the four into one shape bricks every command on a host
+     that passes literals through. -->
+
 ```
 /vijil evaluate <agent>   # re-runs inspect + Diamond: baseline → bespoke → adaptive
 /vijil analyze <agent>    # root-cause the failures → prompt / guardrail / code

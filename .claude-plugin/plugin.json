@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "vijil",
   "displayName": "Vijil",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Ship trusted agents from Claude Code. Inspect the agent you're building free, local, no account — then evaluate it fully with black-box adversarial evaluation via Vijil Diamond — root-cause the failures, and protect (Dome) or adapt (Darwin) them; register it to track its trust over time. Reversible: reads, measures, and first-party record writes only — fixes are proposals into a human gate.",
   "author": {
     "name": "Vijil",
@@ -17,10 +17,11 @@
       "command": "uvx",
       "args": ["vijil-mcp"],
       "env": {
-        "VIJIL_CLIENT_ID": "${VIJIL_CLIENT_ID}",
-        "VIJIL_CLIENT_SECRET": "${VIJIL_CLIENT_SECRET}",
-        "VIJIL_API_KEY": "${VIJIL_API_KEY}",
-        "VIJIL_CONSOLE_URL": "${VIJIL_CONSOLE_URL:-https://console-api.vijil.ai}"
+        "VIJIL_CLIENT_ID": "${VIJIL_CLIENT_ID:-}",
+        "VIJIL_CLIENT_SECRET": "${VIJIL_CLIENT_SECRET:-}",
+        "VIJIL_API_KEY": "${VIJIL_API_KEY:-}",
+        "VIJIL_CONSOLE_URL": "${VIJIL_CONSOLE_URL}",
+        "VIJIL_CA_BUNDLE": "${VIJIL_CA_BUNDLE:-}"
       }
     }
   }
